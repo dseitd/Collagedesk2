@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -8,84 +8,70 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <!-- Базовые стили -->
   <link rel="stylesheet" href="./static/style.css">
-  <style>
-    /* Минимальные встроенные стили на случай, если внешние не загрузятся */
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: var(--tg-theme-bg-color, #ffffff);
-      color: var(--tg-theme-text-color, #000000);
-    }
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    .loading {
-      text-align: center;
-      padding: 50px;
-      font-size: 18px;
-    }
-    .error-message {
-      color: red;
-      text-align: center;
-      padding: 20px;
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>CollegeDesk</h1>
-      <div id="user-info" class="user-info"></div>
+  <div class="app">
+    <header class="header">
+      <div class="user-info">
+        <h1 class="greeting">Здравствуйте!</h1>
+        <p class="user-name" id="user-name"></p>
+      </div>
     </header>
-    
-    <main>
-      <div id="content">
-        <div class="loading">Loading...</div>
+
+    <main class="main">
+      <div class="quick-actions">
+        <button class="action-button" id="btn-schedule">
+          <span class="action-icon">📅</span>
+          <span class="action-text">Расписание</span>
+        </button>
+        <button class="action-button" id="btn-grades">
+          <span class="action-icon">📊</span>
+          <span class="action-text">Оценки</span>
+        </button>
+        <button class="action-button" id="btn-homework">
+          <span class="action-icon">📚</span>
+          <span class="action-text">Домашние задания</span>
+        </button>
+        <button class="action-button" id="btn-attendance">
+          <span class="action-icon">✓</span>
+          <span class="action-text">Посещаемость</span>
+        </button>
       </div>
-      
-      <div id="admin-panel" class="panel" style="display: none;">
-        <h2>Admin Panel</h2>
-        <div class="card">
-          <h3>Admin Functions</h3>
-          <ul class="menu">
-            <li><button id="btn-manage-users">Manage Users</button></li>
-            <li><button id="btn-manage-schedule">Manage Schedule</button></li>
-            <li><button id="btn-publish-news">Publish News</button></li>
-          </ul>
+
+      <section class="schedule-section">
+        <h2 class="section-title">Сегодня</h2>
+        <div class="schedule-list" id="today-schedule">
+          <!-- Расписание будет добавлено через JavaScript -->
         </div>
-      </div>
-      
-      <div id="teacher-panel" class="panel" style="display: none;">
-        <h2>Teacher Panel</h2>
-        <div class="card">
-          <h3>Teacher Functions</h3>
-          <ul class="menu">
-            <li><button id="btn-view-schedule">View Schedule</button></li>
-            <li><button id="btn-manage-grades">Manage Grades</button></li>
-            <li><button id="btn-check-attendance">Check Attendance</button></li>
-          </ul>
+      </section>
+
+      <section class="news-section">
+        <h2 class="section-title">Новости</h2>
+        <div class="news-list" id="news-list">
+          <!-- Новости будут добавлены через JavaScript -->
         </div>
-      </div>
-      
-      <div id="student-panel" class="panel" style="display: none;">
-        <h2>Student Panel</h2>
-        <div class="card">
-          <h3>Student Functions</h3>
-          <ul class="menu">
-            <li><button id="btn-my-schedule">My Schedule</button></li>
-            <li><button id="btn-my-grades">My Grades</button></li>
-            <li><button id="btn-college-news">College News</button></li>
-          </ul>
-        </div>
-      </div>
+      </section>
     </main>
-    
-    <footer>
-      <p>CollegeDesk &copy; 2025</p>
-    </footer>
+
+    <nav class="bottom-nav">
+      <button class="nav-button active" data-tab="home">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-text">Главная</span>
+      </button>
+      <button class="nav-button" data-tab="schedule">
+        <span class="nav-icon">📅</span>
+        <span class="nav-text">Расписание</span>
+      </button>
+      <button class="nav-button" data-tab="grades">
+        <span class="nav-icon">📊</span>
+        <span class="nav-text">Оценки</span>
+      </button>
+      <button class="nav-button" data-tab="profile">
+        <span class="nav-icon">👤</span>
+        <span class="nav-text">Профиль</span>
+      </button>
+    </nav>
   </div>
   
   <!-- Скрипт для работы с Telegram WebApp -->

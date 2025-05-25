@@ -114,6 +114,97 @@ async function checkAuthentication() {
         const response = await fetch(`${API_URL}/users/me`);
         if (response.ok) {
             const user = await response.json();
+            // Инициализация Telegram Web App
+            const tg = window.Telegram.WebApp;
+
+            // Настройка темы
+            document.documentElement.style.setProperty('--tg-theme-bg-color', tg.backgroundColor);
+            document.documentElement.style.setProperty('--tg-theme-text-color', tg.textColor);
+            document.documentElement.style.setProperty('--tg-theme-button-color', tg.buttonColor);
+            document.documentElement.style.setProperty('--tg-theme-button-text-color', tg.buttonTextColor);
+
+            // Расширяем на весь экран
+            tg.expand();
+
+            // Инициализация приложения
+            document.addEventListener('DOMContentLoaded', () => {
+                // Получаем данные пользователя из Telegram
+                const user = tg.initDataUnsafe?.user;
+                if (user) {
+                    document.getElementById('user-name').textContent = `${user.first_name} ${user.last_name || ''}`;
+                }
+
+                // Добавляем пример расписания
+                const schedule = [
+                    { time: '9:00', subject: 'Математика', room: '301', teacher: 'Иванов И.И.' },
+                    { time: '10:45', subject: 'Физика', room: '201', teacher: 'Петров П.П.' },
+                    { time: '12:30', subject: 'Информатика', room: '401', teacher: 'Сидоров С.С.' }
+                ];
+
+                const scheduleList = document.getElementById('today-schedule');
+                schedule.forEach(lesson => {
+                    const lessonEl = document.createElement('div');
+                    lessonEl.className = 'schedule-item';
+                    lessonEl.innerHTML = `
+                        <div class="lesson-time">${lesson.time}</div>
+                        <div class="lesson-info">
+                            <div class="lesson-subject">${lesson.subject}</div>
+                            <div class="lesson-details">Каб. ${lesson.room} • ${lesson.teacher}</div>
+                        </div>
+                    `;
+                    scheduleList.appendChild(lessonEl);
+                });
+
+                // Добавляем пример новостей
+                const news = [
+                    { title: 'День открытых дверей', date: '25 мая', content: 'Приглашаем всех на день открытых дверей в нашем колледже!' },
+                    { title: 'Начало экзаменов', date: '1 июня', content: 'Расписание экзаменов доступно в разделе "Расписание"' }
+                ];
+
+                const newsList = document.getElementById('news-list');
+                news.forEach(item => {
+                    const newsEl = document.createElement('div');
+                    newsEl.className = 'news-item';
+                    newsEl.innerHTML = `
+                        <div class="news-header">
+                            <div class="news-title">${item.title}</div>
+                            <div class="news-date">${item.date}</div>
+                        </div>
+                        <div class="news-content">${item.content}</div>
+                    `;
+                    newsList.appendChild(newsEl);
+                });
+
+                // Обработчики кнопок быстрых действий
+                document.getElementById('btn-schedule')?.addEventListener('click', () => {
+                    tg.showAlert('Открытие расписания...');
+                });
+
+                document.getElementById('btn-grades')?.addEventListener('click', () => {
+                    tg.showAlert('Открытие оценок...');
+                });
+
+                document.getElementById('btn-homework')?.addEventListener('click', () => {
+                    tg.showAlert('Открытие домашних заданий...');
+                });
+
+                document.getElementById('btn-attendance')?.addEventListener('click', () => {
+                    tg.showAlert('Открытие посещаемости...');
+                });
+
+                // Обработчики кнопок навигации
+                const navButtons = document.querySelectorAll('.nav-button');
+                navButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        navButtons.forEach(btn => btn.classList.remove('active'));
+                        button.classList.add('active');
+                        tg.showAlert(`Переход к ${button.querySelector('.nav-text').textContent}...`);
+                    });
+                });
+            });
+
+            // Уведомляем Telegram, что приложение готово
+            tg.ready();
             initializeUserInterface(user);
         } else {
             handleLogout();
