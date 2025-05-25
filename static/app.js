@@ -13,7 +13,98 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeInterface() {
-    // Add event listeners
+    // Инициализация Telegram Web App
+    const tg = window.Telegram.WebApp;
+
+    // Настройка темы
+    document.documentElement.style.setProperty('--tg-theme-bg-color', tg.backgroundColor);
+    document.documentElement.style.setProperty('--tg-theme-text-color', tg.textColor);
+    document.documentElement.style.setProperty('--tg-theme-button-color', tg.buttonColor);
+    document.documentElement.style.setProperty('--tg-theme-button-text-color', tg.buttonTextColor);
+
+    // Расширяем на весь экран
+    tg.expand();
+
+    // Показываем кнопку назад
+    tg.BackButton.show();
+
+    // Обработчик кнопки назад
+    tg.BackButton.onClick(() => {
+        tg.close();
+    });
+
+    // Функция для отображения панели пользователя
+    function showUserPanel(role) {
+        // Скрываем все панели
+        document.querySelectorAll('.panel').forEach(panel => {
+            panel.style.display = 'none';
+        });
+
+        // Показываем нужную панель
+        const panelId = `${role}-panel`;
+        const panel = document.getElementById(panelId);
+        if (panel) {
+            panel.style.display = 'block';
+        }
+    }
+
+    // Обработчики кнопок
+    document.getElementById('btn-manage-users')?.addEventListener('click', () => {
+        tg.showAlert('Управление пользователями');
+    });
+
+    document.getElementById('btn-manage-schedule')?.addEventListener('click', () => {
+        tg.showAlert('Управление расписанием');
+    });
+
+    document.getElementById('btn-publish-news')?.addEventListener('click', () => {
+        tg.showAlert('Публикация новостей');
+    });
+
+    document.getElementById('btn-view-schedule')?.addEventListener('click', () => {
+        tg.showAlert('Просмотр расписания');
+    });
+
+    document.getElementById('btn-manage-grades')?.addEventListener('click', () => {
+        tg.showAlert('Управление оценками');
+    });
+
+    document.getElementById('btn-check-attendance')?.addEventListener('click', () => {
+        tg.showAlert('Проверка посещаемости');
+    });
+
+    document.getElementById('btn-my-schedule')?.addEventListener('click', () => {
+        tg.showAlert('Моё расписание');
+    });
+
+    document.getElementById('btn-my-grades')?.addEventListener('click', () => {
+        tg.showAlert('Мои оценки');
+    });
+
+    document.getElementById('btn-college-news')?.addEventListener('click', () => {
+        tg.showAlert('Новости колледжа');
+    });
+
+    // Инициализация приложения
+    document.addEventListener('DOMContentLoaded', () => {
+        // Получаем данные пользователя из Telegram
+        const user = tg.initDataUnsafe?.user;
+        if (user) {
+            document.getElementById('user-info').innerHTML = `
+                <p>Пользователь: ${user.first_name} ${user.last_name || ''}</p>
+            `;
+        }
+
+        // Для демонстрации показываем панель студента
+        showUserPanel('student');
+
+        // Скрываем индикатор загрузки
+        document.querySelector('.loading').style.display = 'none';
+    });
+
+    // Уведомляем Telegram, что приложение готово
+    tg.ready();
+
     document.getElementById('upload-form')?.addEventListener('submit', handleUpload);
     document.getElementById('logout-btn')?.addEventListener('click', handleLogout);
 }

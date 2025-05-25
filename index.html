@@ -1,27 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CollegeDesk - GitHub Pages</title>
-    <link rel="stylesheet" href="./static/style.css">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CollegeDesk</title>
+  <!-- Telegram WebApp JS -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <!-- Базовые стили -->
+  <link rel="stylesheet" href="./static/style.css">
+  <style>
+    /* Минимальные встроенные стили на случай, если внешние не загрузятся */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--tg-theme-bg-color, #ffffff);
+      color: var(--tg-theme-text-color, #000000);
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .loading {
+      text-align: center;
+      padding: 50px;
+      font-size: 18px;
+    }
+    .error-message {
+      color: red;
+      text-align: center;
+      padding: 20px;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>CollegeDesk</h1>
-        <div class="content">
-            <p>Добро пожаловать в CollegeDesk!</p>
-            <div class="features">
-                <h2>Функции</h2>
-                <ul>
-                    <li>Управление документами</li>
-                    <li>Администрирование</li>
-                    <li>Интеграция с Telegram</li>
-                </ul>
-            </div>
+  <div class="container">
+    <header>
+      <h1>CollegeDesk</h1>
+      <div id="user-info" class="user-info"></div>
+    </header>
+    
+    <main>
+      <div id="content">
+        <div class="loading">Loading...</div>
+      </div>
+      
+      <div id="admin-panel" class="panel" style="display: none;">
+        <h2>Admin Panel</h2>
+        <div class="card">
+          <h3>Admin Functions</h3>
+          <ul class="menu">
+            <li><button id="btn-manage-users">Manage Users</button></li>
+            <li><button id="btn-manage-schedule">Manage Schedule</button></li>
+            <li><button id="btn-publish-news">Publish News</button></li>
+          </ul>
         </div>
-    </div>
-    <script src="static/app.js"></script>
+      </div>
+      
+      <div id="teacher-panel" class="panel" style="display: none;">
+        <h2>Teacher Panel</h2>
+        <div class="card">
+          <h3>Teacher Functions</h3>
+          <ul class="menu">
+            <li><button id="btn-view-schedule">View Schedule</button></li>
+            <li><button id="btn-manage-grades">Manage Grades</button></li>
+            <li><button id="btn-check-attendance">Check Attendance</button></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div id="student-panel" class="panel" style="display: none;">
+        <h2>Student Panel</h2>
+        <div class="card">
+          <h3>Student Functions</h3>
+          <ul class="menu">
+            <li><button id="btn-my-schedule">My Schedule</button></li>
+            <li><button id="btn-my-grades">My Grades</button></li>
+            <li><button id="btn-college-news">College News</button></li>
+          </ul>
+        </div>
+      </div>
+    </main>
+    
+    <footer>
+      <p>CollegeDesk &copy; 2025</p>
+    </footer>
+  </div>
+  
+  <!-- Скрипт для работы с Telegram WebApp -->
+  <script src="./static/app.js"></script>
+  <!-- Скрипт для диагностики проблем при загрузке -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Document loaded');
+      
+      // Проверяем наличие Telegram WebApp API
+      if (window.Telegram && window.Telegram.WebApp) {
+        console.log('Telegram WebApp API доступен');
+      } else {
+        console.error('Telegram WebApp API не доступен');
+      }
+    });
+  </script>
 </body>
 </html>
