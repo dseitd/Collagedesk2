@@ -5,13 +5,13 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 # Настройка логирования
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO
+    level=logging.DEBUG  # Изменили на DEBUG для более подробных логов
 )
 logger = logging.getLogger(__name__)
 
 # Обработчик команды /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    logger.info('Получена команда /start')
+    logger.debug('Получена команда /start')
     user = update.effective_user
     message = (
         f'Привет, {user.first_name}!\n'
@@ -22,11 +22,12 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         '/webapp - открыть веб-приложение\n'
         '/admin - открыть админ-панель\n'
     )
-    logger.info('Отправка ответа на /start')
+    logger.debug('Отправка ответа на /start')
     await update.message.reply_text(message)
 
 # Обработчик команды /help
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    logger.debug('Получена команда /help')
     await update.message.reply_text(
         'Я могу помочь вам с:\n'
         '/start - начать диалог\n'
@@ -39,6 +40,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
 # Обработчик команды /about
 async def about_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    logger.debug('Получена команда /about')
     await update.message.reply_text(
         'Я бот CollegeDesk, созданный для управления документами.\n'
         'Используйте /webapp для доступа к веб-приложению или /admin для входа в админ-панель.'
@@ -46,6 +48,7 @@ async def about_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 
 # Обработчик команды /webapp
 async def webapp_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    logger.debug('Получена команда /webapp')
     webapp_url = "https://dseitd.github.io/Collagedesk2/"
     await update.message.reply_text(
         f'Откройте веб-приложение CollegeDesk по ссылке:\n{webapp_url}'
@@ -53,6 +56,7 @@ async def webapp_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 
 # Обработчик команды /admin
 async def admin_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    logger.debug('Получена команда /admin')
     admin_url = "https://dseitd.github.io/Collagedesk2/admin"
     await update.message.reply_text(
         f'Откройте админ-панель CollegeDesk по ссылке:\n{admin_url}'
@@ -60,35 +64,30 @@ async def admin_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 
 # Обработчик текстовых сообщений
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    logger.debug('Получено текстовое сообщение')
     user_message = update.message.text
     await update.message.reply_text(
         f'Вы сказали: {user_message}\n'
         'Я повторяю все, что вы говорите!'
     )
 
-# Обработчик ошибок
-async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
-    logger.error(f'Update {update} caused error {context.error}')
-
 def main() -> None:
-    # Замените 'YOUR_BOT_TOKEN' на ваш токен бота
+    # Создаем приложение
     application = Application.builder().token('7640810813:AAF0b9PQbOEbImW3byH3HXTjaWS6RNzQG_M').build()
 
     # Добавляем обработчики команд
-    application.add_handler(CommandHandler('start', start))
-    application.add_handler(CommandHandler('help', help_command))
-    application.add_handler(CommandHandler('about', about_command))
-    application.add_handler(CommandHandler('webapp', webapp_command))
-    application.add_handler(CommandHandler('admin', admin_command))
-    
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(CommandHandler("help", help_command))
+    application.add_handler(CommandHandler("about", about_command))
+    application.add_handler(CommandHandler("webapp", webapp_command))
+    application.add_handler(CommandHandler("admin", admin_command))
+
     # Добавляем обработчик текстовых сообщений
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
 
-    # Добавляем обработчик ошибок
-    application.add_error_handler(error_handler)
-
     # Запускаем бота
-    application.run_polling(allowed_updates=Update.ALL_TYPES)
+    logger.info("Запуск бота...")
+    application.run_polling(drop_pending_updates=True)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

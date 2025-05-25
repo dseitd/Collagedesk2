@@ -37,7 +37,25 @@ async function loadData() {
     try {
         // Load users if in admin panel
         if (window.location.pathname === '/admin') {
-            await loadUsers();
+          let tg = window.Telegram.WebApp;
+
+// Инициализация Telegram Web App
+tg.expand(); // Раскрываем на весь экран
+
+// Устанавливаем основной цвет
+document.documentElement.style.setProperty('--tg-theme-bg-color', tg.backgroundColor);
+document.documentElement.style.setProperty('--tg-theme-text-color', tg.textColor);
+
+// Показываем кнопку назад в хедере Telegram
+tg.BackButton.show();
+
+// Обработчик нажатия кнопки назад
+tg.BackButton.onClick(() => {
+    tg.close();
+});
+
+// Уведомляем Telegram, что приложение готово
+tg.ready();
         }
         // Load documents
         await loadDocuments();

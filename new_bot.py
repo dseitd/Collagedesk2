@@ -1,4 +1,5 @@
 import logging
+import asyncio
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
@@ -27,6 +28,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 # Обработчик команды /help
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    logger.info('Получена команда /help')
     await update.message.reply_text(
         'Я могу помочь вам с:\n'
         '/start - начать диалог\n'
@@ -39,6 +41,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
 # Обработчик команды /about
 async def about_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    logger.info('Получена команда /about')
     await update.message.reply_text(
         'Я бот CollegeDesk, созданный для управления документами.\n'
         'Используйте /webapp для доступа к веб-приложению или /admin для входа в админ-панель.'
@@ -46,6 +49,7 @@ async def about_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 
 # Обработчик команды /webapp
 async def webapp_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    logger.info('Получена команда /webapp')
     webapp_url = "https://dseitd.github.io/Collagedesk2/"
     await update.message.reply_text(
         f'Откройте веб-приложение CollegeDesk по ссылке:\n{webapp_url}'
@@ -53,6 +57,7 @@ async def webapp_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 
 # Обработчик команды /admin
 async def admin_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    logger.info('Получена команда /admin')
     admin_url = "https://dseitd.github.io/Collagedesk2/admin"
     await update.message.reply_text(
         f'Откройте админ-панель CollegeDesk по ссылке:\n{admin_url}'
@@ -60,6 +65,7 @@ async def admin_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 
 # Обработчик текстовых сообщений
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    logger.info('Получено текстовое сообщение')
     user_message = update.message.text
     await update.message.reply_text(
         f'Вы сказали: {user_message}\n'
@@ -70,8 +76,8 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
     logger.error(f'Update {update} caused error {context.error}')
 
-def main() -> None:
-    # Замените 'YOUR_BOT_TOKEN' на ваш токен бота
+async def main() -> None:
+    # Инициализация бота
     application = Application.builder().token('7640810813:AAF0b9PQbOEbImW3byH3HXTjaWS6RNzQG_M').build()
 
     # Добавляем обработчики команд
@@ -88,7 +94,10 @@ def main() -> None:
     application.add_error_handler(error_handler)
 
     # Запускаем бота
-    application.run_polling(allowed_updates=Update.ALL_TYPES)
+    logger.info("Запуск бота...")
+    await application.initialize()
+    await application.start()
+    await application.run_polling(allowed_updates=Update.ALL_TYPES)
 
 if __name__ == '__main__':
-    main()
+    asyncio.run(main())
